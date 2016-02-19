@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 import java.util.Set;
 
@@ -59,6 +60,7 @@ import org.eclipse.viatra.query.runtime.matchers.psystem.rewriters.PQueryFlatten
 import org.eclipse.viatra.query.runtime.matchers.tuple.Tuple;
 
 import com.google.common.base.Function;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -195,7 +197,11 @@ public class LocalSearchResultProvider implements IQueryResultProvider {
 
     private LocalSearchMatcher initializeMatcher(Object[] parameters) {
         try {
-            return newLocalSearchMatcher(parameters);
+        	Stopwatch initTimer = Stopwatch.createStarted();
+            LocalSearchMatcher newLocalSearchMatcher = newLocalSearchMatcher(parameters);
+        	long initTime = initTimer.elapsed(TimeUnit.NANOSECONDS);
+        	logger.debug("Local search matcher initialization time: " + initTime + "ns");
+			return newLocalSearchMatcher;
         } catch (QueryProcessingException e) {
             throw new RuntimeException(e);
         } catch (ViatraQueryException e) {
@@ -249,7 +255,11 @@ public class LocalSearchResultProvider implements IQueryResultProvider {
             for (int i = 0; i < parameters.length; i++) {
                 frame.setValue(i, parameters[i]);
             }
-            return matcher.getOneArbitraryMatch(frame);
+            Stopwatch getOneMatchTimer = Stopwatch.createStarted();
+            MatchingFrame oneArbitraryMatch = matcher.getOneArbitraryMatch(frame);
+            long getOneMatchTime = getOneMatchTimer.elapsed(TimeUnit.NANOSECONDS);
+            logger.debug("Get one arbitrary match time for query '" + query.getFullyQualifiedName() + "': " + getOneMatchTime + "ns");
+            return oneArbitraryMatch;
         } catch (LocalSearchException e) {
             throw new RuntimeException(e);
         }
@@ -263,7 +273,11 @@ public class LocalSearchResultProvider implements IQueryResultProvider {
             for (int i = 0; i < parameters.length; i++) {
                 frame.setValue(i, parameters[i]);
             }
-            return matcher.countMatches(frame);
+            Stopwatch countTimer = Stopwatch.createStarted();
+            int matchCount = matcher.countMatches(frame);
+            long countTime = countTimer.elapsed(TimeUnit.NANOSECONDS);
+            logger.debug("Count matches time for query '" + query.getFullyQualifiedName() + "': " + countTime + "ns");
+            return matchCount;
         } catch (LocalSearchException e) {
             throw new RuntimeException(e);
         }
@@ -277,7 +291,11 @@ public class LocalSearchResultProvider implements IQueryResultProvider {
             for (int i = 0; i < parameters.length; i++) {
                 frame.setValue(i, parameters[i]);
             }
-            return matcher.getAllMatches(frame);
+            Stopwatch getAllMatchesTimer = Stopwatch.createStarted();
+            Collection<MatchingFrame> allMatches = matcher.getAllMatches(frame);
+            long getAllMatchesTime = getAllMatchesTimer.elapsed(TimeUnit.NANOSECONDS);
+            logger.debug("Get all matches time for query '" + query.getFullyQualifiedName() + "': " + getAllMatchesTime + "ns");
+			return allMatches;
         } catch (LocalSearchException e) {
             throw new RuntimeException(e);
         }
