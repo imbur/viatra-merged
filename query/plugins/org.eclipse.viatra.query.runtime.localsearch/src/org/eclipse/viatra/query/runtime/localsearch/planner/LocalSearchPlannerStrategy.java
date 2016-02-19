@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.viatra.query.runtime.localsearch.planner;
 
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -39,12 +40,12 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 
 /**
+ * This strategy does not use the model statistics to calculate a search plan for a given pattern.
+ * 
  * 
  * @author Marton Bur
  *
- * @deprecated Use the {@link org.eclipse.viatra.query.runtime.localsearch.planner.LocalSearchRuntimeBasedStrategy} and its belonging components instead.
  */
-@Deprecated
 public class LocalSearchPlannerStrategy implements IQueryPlannerStrategy {
 
 	private IConstraintEvaluablePredicateProvider constraintPredicateProvider;

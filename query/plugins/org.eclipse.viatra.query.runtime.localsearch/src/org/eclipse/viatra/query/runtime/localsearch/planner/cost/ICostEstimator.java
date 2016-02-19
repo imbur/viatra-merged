@@ -17,10 +17,7 @@ import org.eclipse.viatra.query.runtime.matchers.psystem.PConstraint;
  * 
  * @author Marton Bur
  *
- * @deprecated This is used by {@link org.eclipse.viatra.query.runtime.localsearch.planner.LocalSearchPlannerStrategy}. 
- * Use the {@link org.eclipse.viatra.query.runtime.localsearch.planner.LocalSearchRuntimeBasedStrategy} and its belonging components instead.
  */
-@Deprecated
 public interface ICostEstimator {
 
     /**
